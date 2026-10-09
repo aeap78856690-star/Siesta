@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@android:color/black">
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/btnAuth"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="@string/auth_button"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnSiesta"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="@string/siesta_button"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnCamera"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="@string/camera_button"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnGallery"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="@string/gallery_button" />
+
+</LinearLayout>
