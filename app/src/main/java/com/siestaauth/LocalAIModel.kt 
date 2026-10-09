@@ -1,0 +1,35 @@
+package com.siestaauth
+
+import android.content.Context
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+class LocalAIModel(private val context: Context) {
+
+    suspend fun chat(message: String): String = withContext(Dispatchers.IO) {
+        // Esto es un modelo local simulado.
+        // En producción, integrarías TensorFlow Lite u otro modelo offline.
+
+        val responses = mapOf(
+            "hola" to "Hola, ¿cómo estás?",
+            "quién eres" to "Soy Siesta, tu asistente inteligente.",
+            "qué hora es" to "No tengo acceso al reloj del sistema ahora mismo.",
+            "cuéntame un chiste" to "¿Qué le dice una IA a otra? ¡Cero que uno de nosotros está equivocado!",
+            "ayuda" to "Puedo ayudarte con el chat, la cámara o la galería.",
+            "gracias" to "De nada, estoy para ayudarte.",
+            "adiós" to "¡Hasta pronto!"
+        )
+
+        val lowerMessage = message.lowercase()
+
+        // Buscar coincidencia
+        for ((key, response) in responses) {
+            if (lowerMessage.contains(key)) {
+                return@withContext response
+            }
+        }
+
+        // Respuesta por defecto
+        return@withContext "Siento no entender tu mensaje. Intenta con palabras clave como 'ayuda' u 'hola'."
+    }
+}
