@@ -46,4 +46,3 @@ class UserSetupActivity : AppCompatActivity() {
         finish()
     }
 }
-
