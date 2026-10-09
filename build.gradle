@@ -1,21 +1,4 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build'
-        classpath 'org.jetbrains.kotlin'
-    }
+plugins {
+    id("com.android.application") version "8.7.3" apply false
+    id("org.jetbrains.kotlin.android") version "2.0.21" apply false
 }
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-// Dependencias para el Historial Persistente con Room
-implementation 'androidx.room:room-runtime:2.6.1'
-implementation 'androidx.room:room-ktx:2.6.1'
-kapt 'androidx.room:room-compiler:2.6.1'
