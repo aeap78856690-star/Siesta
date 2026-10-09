@@ -428,3 +428,165 @@
 
 </LinearLayout>
 
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://android.com"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="@android:color/black">
+
+    <!-- Menú Superior Horizontal de Herramientas y Ajustes Avanzados -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:id="@+id/listenKeywordButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="🎙️ Palabra"
+            android:layout_marginEnd="3dp"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/recordVoiceButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="🎙️ Grabar"
+            android:layout_marginEnd="3dp"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/memoryButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="📦 Memoria"
+            android:layout_marginEnd="3dp"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/languageButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="🌐 Idioma"
+            android:layout_marginEnd="3dp"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/batteryButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="🔋 Batería"
+            android:layout_marginEnd="3dp"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/settingsButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="⚙️ Config"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <!-- Título de la Aplicación -->
+    <TextView
+        android:id="@+id/chatTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Siesta"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Panel de Salida de Mensajes e Historial (Con Scrollbar Habilitado) -->
+    <TextView
+        android:id="@+id/chatOutput"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="Siesta está lista."
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:background="#111111"
+        android:padding="12dp"
+        android:scrollbars="vertical" />
+
+    <!-- Control de Configuración de Velocidad de Voz -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Velocidad"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp" />
+
+    <SeekBar
+        android:id="@+id/speedSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="50" />
+
+    <!-- Control de Configuración de Tono de Voz -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tono"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp" />
+
+    <SeekBar
+        android:id="@+id/pitchSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="60" />
+
+    <!-- Campo de Entrada de Texto Sucesivo con Botón de Envío -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <EditText
+            android:id="@+id/chatInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Escribe aquí..."
+            android:textColor="@android:color/white"
+            android:textColorHint="#888888"
+            android:background="#222222"
+            android:padding="10dp"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/sendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📩 Enviar"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Botón de Control para Respuesta por Voz Activa -->
+    <Button
+        android:id="@+id/speakButton"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="🎙️ Hablar"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>
