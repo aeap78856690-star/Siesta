@@ -187,3 +187,104 @@
         android:layout_marginTop="12dp" />
 
 </LinearLayout>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://android.com"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/black">
+
+    <TextView
+        android:id="@+id/chatTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Siesta"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/listenKeywordButton"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Escuchar Siesta"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="#FF6200EE"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/chatOutput"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="Siesta está lista."
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:background="#111111"
+        android:padding="12dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Velocidad"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="12dp" />
+
+    <SeekBar
+        android:id="@+id/speedSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="50" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tono"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="12dp" />
+
+    <SeekBar
+        android:id="@+id/pitchSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="60" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp">
+
+        <EditText
+            android:id="@+id/chatInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Escribe aquí."
+            android:textColor="@android:color/white"
+            android:textColorHint="#AAAAAA"
+            android:background="#222222"
+            android:padding="12dp" />
+
+        <Button
+            android:id="@+id/sendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enviar"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/speakButton"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Hablar"
+        android:layout_marginTop="12dp" />
+
+</LinearLayout>
+
