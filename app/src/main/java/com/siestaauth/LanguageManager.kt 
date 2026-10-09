@@ -1,0 +1,49 @@
+package com.siestaauth
+
+import android.content.Context
+import android.content.SharedPreferences
+import java.util.Locale
+
+class LanguageManager(context: Context) {
+
+    private val prefs: SharedPreferences = context.getSharedPreferences(
+        "siesta_language",
+        Context.MODE_PRIVATE
+    )
+
+    private val languages = mapOf(
+        "es" to Locale("es", "ES"),
+        "en" to Locale("en", "US"),
+        "ja" to Locale("ja", "JP"),
+        "ru" to Locale("ru", "RU")
+    )
+
+    fun getCurrentLanguage(): String {
+        return prefs.getString("current_language", "es") ?: "es"
+    }
+
+    fun setLanguage(languageCode: String) {
+        if (languages.containsKey(languageCode)) {
+            prefs.edit().putString("current_language", languageCode).apply()
+        }
+    }
+
+    fun getLocale(): Locale {
+        val languageCode = getCurrentLanguage()
+        return languages[languageCode] ?: Locale("es", "ES")
+    }
+
+    fun getAvailableLanguages(): List<String> {
+        return languages.keys.toList()
+    }
+
+    fun getLanguageName(code: String): String {
+        return when (code) {
+            "es" -> "Español"
+            "en" -> "English"
+            "ja" -> "日本語"
+            "ru" -> "Русский"
+            else -> "Desconocido"
+        }
+    }
+}
