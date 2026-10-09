@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Siesta</string>
+    <string name="welcome">Bienvenido a Siesta</string>
+    <string name="auth_button">Autenticación</string>
+    <string name="siesta_button">Siesta</string>
+    <string name="camera_button">Cámara</string>
+    <string name="gallery_button">Galería</string>
+    <string name="blocked_message">No tienes acceso a esto</string>
+    <string name="chat_title">Siesta</string>
+    <string name="chat_hint">Escribe aquí...</string>
+    <string name="send_button">Enviar</string>
+</resources>
