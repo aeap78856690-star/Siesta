@@ -1,0 +1,91 @@
+{
+  "app_name": "Siesta",
+  "version": "1.0.0",
+  "owner": {
+    "authenticated": false,
+    "auth_method": "biometric",
+    "name": "Unknown"
+  },
+  "ai": {
+    "online": {
+      "provider": "gemini",
+      "api_key": "TU_API_KEY_AQUI",
+      "model": "gemini-1.5-flash",
+      "timeout": 30
+    },
+    "offline": {
+      "model_path": "assets/models/llama",
+      "model_type": "tflite",
+      "max_tokens": 256,
+      "temperature": 0.7
+    },
+    "auto_mode": true,
+    "trigger_word": "siesta",
+    "trigger_response": "Aquí estoy."
+  },
+  "voice": {
+    "speech_to_text": "android_native",
+    "text_speech": "miko_nakano",
+    "voice_model": "miko_nakano",
+    "languages": ["es", "en", "ja", "ru"]
+  },
+  "memory": {
+    "enabled": true,
+    "auto_save": false,
+    "per_user": true,
+    "encryption": true,
+    "max_conversations": 100
+  },
+  "battery": {
+    "optimize": true,
+    "always_listening": false,
+    "idle_shutdown_minutes": 5
+  },
+  "language": "es",
+  "authentication": {
+    "biometric_required": true,
+    "password_backup": true,
+    "session_timeout_minutes": 30,
+    "multi_user": true
+  },
+  "permissions": {
+    "users": [
+      {
+        "userName": "Yo",
+        "relationship": "owner",
+        "canAccessSiesta": true,
+        "canAccessXender": true,
+        "canAccessMemory": true,
+        "canAccessCamera": true,
+        "canAccessGallery": true,
+        "canChangeLanguage": true,
+        "canModifySettings": true,
+        "canManageUsers": true
+      },
+      {
+        "userName": "Novia",
+        "relationship": "novia",
+        "canAccessSiesta": true,
+        "canAccessXender": true,
+        "canAccessMemory": true,
+        "canAccessCamera": true,
+        "canAccessGallery": true,
+        "canChangeLanguage": true,
+        "canModifySettings": true,
+        "canManageUsers": false
+      },
+      {
+        "userName": "Prima",
+        "relationship": "prima",
+        "canAccessSiesta": false,
+        "canAccessXender": false,
+        "canAccessMemory": false,
+        "canAccessCamera": true,
+        "canAccessGallery": true,
+        "canChangeLanguage": true,
+        "canModifySettings": true,
+        "canManageUsers": false
+      }
+    ]
+  }
+}
