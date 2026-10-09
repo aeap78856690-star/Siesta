@@ -1,0 +1,479 @@
+package com.siestaauth
+
+import android.content.Context
+import android.speech.tts.TextToSpeech
+import java.util.Locale
+
+class MikoNakanoVoice(private val context: Context) : TextToSpeech.OnInitListener {
+
+    private lateinit var tts: TextToSpeech
+    private var isReady = false
+    private var ttsSpeed = 1.0f
+    private var ttsPitch = 1.2f
+
+    init {
+        tts = TextToSpeech(context, this)
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            tts.language = Locale("es", "ES")
+            isReady = true
+        }
+    }
+
+    fun speak(text: String, speed: Float = 1.0f, pitch: Float = 1.2f) {
+        if (!isReady) return
+
+        ttsSpeed = speed.coerceIn(0.5f, 2.0f)
+        ttsPitch = pitch.coerceIn(0.5f, 2.0f)
+
+        tts.setPitch(ttsPitch)
+        tts.setSpeechRate(ttsSpeed)
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null)
+    }
+
+    fun stop() {
+        if (::tts.isInitialized) {
+            tts.stop()
+        }
+    }
+
+    fun shutdown() {
+        if (::tts.isInitialized) {
+            tts.shutdown()
+        }
+    }
+}
+package com.siestaauth
+
+import android.content.Context
+import android.speech.tts.TextToSpeech
+import java.util.Locale
+
+class MikoNakanoVoice(private val context: Context) : TextToSpeech.OnInitListener {
+
+    private lateinit var tts: TextToSpeech
+    private var isReady = false
+    private var ttsSpeed = 1.0f
+    private var ttsPitch = 1.2f
+
+    init {
+        tts = TextToSpeech(context, this)
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale("es", "ES"))
+            if (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED) {
+                isReady = true
+            }
+        }
+    }
+
+    fun speak(text: String, speed: Float, pitch: Float) {
+        if (!isReady) return
+
+        ttsSpeed = speed.coerceIn(0.5f, 2.0f)
+        ttsPitch = pitch.coerceIn(0.5f, 2.0f)
+
+        tts.setPitch(ttsPitch)
+        tts.setSpeechRate(ttsSpeed)
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    fun stop() {
+        if (::tts.isInitialized) {
+            tts.stop()
+        }
+    }
+
+    fun shutdown() {
+        if (::tts.isInitialized) {
+            tts.shutdown()
+        }
+    }
+}
+package com.siestaauth
+
+import android.content.Context
+import android.speech.tts.TextToSpeech
+import java.util.Locale
+
+class MikoNakanoVoice(private val context: Context) : TextToSpeech.OnInitListener {
+
+    private lateinit var tts: TextToSpeech
+    private var isReady = false
+    private var ttsSpeed = 1.0f
+    private var ttsPitch = 1.2f
+
+    init {
+        tts = TextToSpeech(context, this)
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale("es", "ES"))
+            if (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED) {
+                isReady = true
+            }
+        }
+    }
+
+    fun speak(text: String, speed: Float, pitch: Float) {
+        if (!isReady) return
+
+        ttsSpeed = speed.coerceIn(0.5f, 2.0f)
+        ttsPitch = pitch.coerceIn(0.5f, 2.0f)
+
+        tts.setPitch(ttsPitch)
+        tts.setSpeechRate(ttsSpeed)
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    fun stop() {
+        if (::tts.isInitialized) {
+            tts.stop()
+        }
+    }
+
+    fun shutdown() {
+        if (::tts.isInitialized) {
+            tts.shutdown()
+        }
+    }
+}
+package com.siestaauth
+
+import android.content.Context
+import android.speech.tts.TextToSpeech
+import java.util.Locale
+
+class MikoNakanoVoice(private val context: Context) : TextToSpeech.OnInitListener {
+
+    private lateinit var tts: TextToSpeech
+    private var isReady = false
+    private var ttsSpeed = 1.0f
+    private var ttsPitch = 1.2f
+
+    init {
+        tts = TextToSpeech(context, this)
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale("es", "ES"))
+            if (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED) {
+                isReady = true
+            }
+        }
+    }
+
+    fun speak(text: String, speed: Float, pitch: Float) {
+        if (!isReady) return
+
+        ttsSpeed = speed.coerceIn(0.5f, 2.0f)
+        ttsPitch = pitch.coerceIn(0.5f, 2.0f)
+
+        tts.setPitch(ttsPitch)
+        tts.setSpeechRate(ttsSpeed)
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    fun stop() {
+        if (::tts.isInitialized) {
+            tts.stop()
+        }
+    }
+
+    fun shutdown() {
+        if (::tts.isInitialized) {
+            tts.shutdown()
+        }
+    }
+}
+package com.siestaauth
+
+import android.content.Context
+import android.speech.tts.TextToSpeech
+import java.util.Locale
+
+class MikoNakanoVoice(private val context: Context) : TextToSpeech.OnInitListener {
+
+    private lateinit var tts: TextToSpeech
+    private var isReady = false
+    private var ttsSpeed = 1.0f
+    private var ttsPitch = 1.2f
+
+    init {
+        tts = TextToSpeech(context, this)
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale("es", "ES"))
+            if (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED) {
+                isReady = true
+            }
+        }
+    }
+
+    fun speak(text: String, speed: Float, pitch: Float) {
+        if (!isReady) return
+
+        ttsSpeed = speed.coerceIn(0.5f, 2.0f)
+        ttsPitch = pitch.coerceIn(0.5f, 2.0f)
+
+        tts.setPitch(ttsPitch)
+        tts.setSpeechRate(ttsSpeed)
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    fun stop() {
+        if (::tts.isInitialized) {
+            tts.stop()
+        }
+    }
+
+    fun shutdown() {
+        if (::tts.isInitialized) {
+            tts.shutdown()
+        }
+    }
+}
+package com.siestaauth
+
+import android.content.Context
+import android.speech.tts.TextToSpeech
+import java.util.Locale
+
+class MikoNakanoVoice(private val context: Context) : TextToSpeech.OnInitListener {
+
+    private lateinit var tts: TextToSpeech
+    private var isReady = false
+    private var ttsSpeed = 1.0f
+    private var ttsPitch = 1.2f
+
+    init {
+        tts = TextToSpeech(context, this)
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale("es", "ES"))
+            if (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED) {
+                isReady = true
+            }
+        }
+    }
+
+    fun speak(text: String, speed: Float, pitch: Float) {
+        if (!isReady) return
+
+        ttsSpeed = speed.coerceIn(0.5f, 2.0f)
+        ttsPitch = pitch.coerceIn(0.5f, 2.0f)
+
+        tts.setPitch(ttsPitch)
+        tts.setSpeechRate(ttsSpeed)
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    fun stop() {
+        if (::tts.isInitialized) {
+            tts.stop()
+        }
+    }
+
+    fun shutdown() {
+        if (::tts.isInitialized) {
+            tts.shutdown()
+        }
+    }
+}
+package com.siestaauth
+
+import android.content.Context
+import android.speech.tts.TextToSpeech
+import java.util.Locale
+
+class MikoNakanoVoice(private val context: Context) : TextToSpeech.OnInitListener {
+
+    private lateinit var tts: TextToSpeech
+    private var isReady = false
+    private var ttsSpeed = 1.0f
+    private var ttsPitch = 1.2f
+
+    init {
+        tts = TextToSpeech(context, this)
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale("es", "ES"))
+            if (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED) {
+                isReady = true
+            }
+        }
+    }
+
+    fun speak(text: String, speed: Float, pitch: Float) {
+        if (!isReady) return
+
+        ttsSpeed = speed.coerceIn(0.5f, 2.0f)
+        ttsPitch = pitch.coerceIn(0.5f, 2.0f)
+
+        tts.setPitch(ttsPitch)
+        tts.setSpeechRate(ttsSpeed)
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    fun stop() {
+        if (::tts.isInitialized) {
+            tts.stop()
+        }
+    }
+
+    fun shutdown() {
+        if (::tts.isInitialized) {
+            tts.shutdown()
+        }
+    }
+}
+package com.siestaauth
+
+import android.content.Context
+import android.speech.tts.TextToSpeech
+import java.util.Locale
+
+class MikoNakanoVoice(private val context: Context) : TextToSpeech.OnInitListener {
+
+    private lateinit var tts: TextToSpeech
+    private var isReady = false
+    private var ttsSpeed = 1.0f
+    private var ttsPitch = 1.2f
+    private var currentLocale = Locale("es", "ES")
+
+    init {
+        tts = TextToSpeech(context, this)
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(currentLocale)
+            if (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED) {
+                isReady = true
+            }
+        }
+    }
+
+    fun speak(text: String, speed: Float, pitch: Float) {
+        if (!isReady) return
+
+        ttsSpeed = speed.coerceIn(0.5f, 2.0f)
+        ttsPitch = pitch.coerceIn(0.5f, 2.0f)
+
+        tts.setPitch(ttsPitch)
+        tts.setSpeechRate(ttsSpeed)
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    fun setLanguage(locale: Locale) {
+        currentLocale = locale
+        if (::tts.isInitialized) {
+            tts.language = locale
+        }
+    }
+
+    fun stop() {
+        if (::tts.isInitialized) {
+            tts.stop()
+        }
+    }
+
+    fun shutdown() {
+        if (::tts.isInitialized) {
+            tts.shutdown()
+        }
+    }
+}
+package com.siestaauth
+
+import android.content.Context
+import android.speech.tts.TextToSpeech
+import java.util.Locale
+
+class MikoNakanoVoice(private val context: Context) : TextToSpeech.OnInitListener {
+
+    private lateinit var tts: TextToSpeech
+    private var isReady = false
+    private var ttsSpeed = 1.0f
+    private var ttsPitch = 1.2f
+    private var currentLocale = Locale("es", "ES")
+
+    private val languageMap = mapOf(
+        "es" to Locale("es", "ES"),
+        "en" to Locale("en", "US"),
+        "ja" to Locale("ja", "JP"),
+        "ru" to Locale("ru", "RU")
+    )
+
+    init {
+        tts = TextToSpeech(context, this)
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(currentLocale)
+            if (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED) {
+                isReady = true
+            }
+        }
+    }
+
+    fun speak(text: String, speed: Float, pitch: Float) {
+        if (!isReady) return
+
+        ttsSpeed = speed.coerceIn(0.5f, 2.0f)
+        ttsPitch = pitch.coerceIn(0.5f, 2.0f)
+
+        // Ajustar pitch por idioma (ej. japonés más agudo, ruso más grave)
+        val adjustedPitch = when (currentLocale.language) {
+            "ja" -> ttsPitch * 1.3f
+            "ru" -> ttsPitch * 0.8f
+            else -> ttsPitch
+        }
+
+        tts.setPitch(adjustedPitch)
+        tts.setSpeechRate(ttsSpeed)
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    fun setLanguage(languageCode: String) {
+        val locale = languageMap[languageCode] ?: Locale("es", "ES")
+        setLocale(locale)
+    }
+
+    fun setLocale(locale: Locale) {
+        currentLocale = locale
+        if (::tts.isInitialized) {
+            tts.language = locale
+        }
+    }
+
+    fun getAvailableLanguages(): List<String> {
+        return languageMap.keys.toList()
+    }
+
+    fun stop() {
+        if (::tts.isInitialized) {
+            tts.stop()
+        }
+    }
+
+    fun shutdown() {
+        if (::tts.isInitialized) {
+            tts.shutdown()
+        }
+    }
+}
+
