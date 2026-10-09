@@ -629,4 +629,117 @@ class ChatActivity : AppCompatActivity() {
                 Toast.makeText(this, "Modo de IA cambiado", Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }
+package com.siestaauth
+
+import android.app.AlertDialog
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.SeekBar
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+
+class ChatActivity : AppCompatActivity() {
+
+    // --- DECLARACIÓN DE VARIABLES GLOBALES (LÓGICA E INFRAESTRUCTURA) ---
+    private lateinit var mikoVoice: MikoNakanoVoice
+    private lateinit var smartAISelector: SmartAISelector
+    private lateinit var voiceListener: BiometricVoiceListener
+    private lateinit var speechRecognizer: RealSpeechRecognizer
+    private lateinit var biometricAuthenticator: BiometricAuthenticator
+    private lateinit var conversationDB: ConversationDatabase
+    private lateinit var languageManager: LanguageManager
+    private lateinit var networkManager: NetworkManager
+    private lateinit var batteryOptimizer: BatteryOptimizer
+    private lateinit var permissionHelper: PermissionHelper
+    private lateinit var siestaDatabase: SiestaDatabase
+
+    // --- ESTADOS INICIALES Y CONFIGURACIONES ---
+    private var voiceSpeed = 1.0f
+    private var voicePitch = 1.2f
+    private var isListeningForKeyword = false
+    private var isRecordingVoice = false
+
+    private val GEMINI_API_KEY = "TU_API_KEY"
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_chat)
+
+        // 1. Recuperar el perfil del usuario autenticado desde el Intent
+        val currentUser = UserProfile(
+            userId = intent.getStringExtra("user_id") ?: "u001",
+            userName = intent.getStringExtra("user_name") ?: "Yo",
+            relationshipToOwner = intent.getStringExtra("user_relationship") ?: "owner",
+            permissions = UserPermissions()
+        )
+
+        val permissionController = PermissionController(this)
+
+        // 2. Validación estricta de permisos lógicos de la aplicación
+        if (!permissionController.canAccessFeature(currentUser, "chat")) {
+            permissionController.blockUnauthorizedAccess(currentUser, "chat", this)
+            finish()
+            return
+        }
+
+        // 3. Verificar y validar permisos físicos del sistema operativo Android
+        permissionHelper = PermissionHelper(this)
+        val missingPermissions = permissionHelper.getMissingPermissions()
+        if (missingPermissions.isNotEmpty()) {
+            Toast.makeText(this, "Faltan permisos: ${missingPermissions.joinToString()}", Toast.LENGTH_LONG).show()
+        }
+
+        // 4. Inicializar componentes de soporte en orden sucesivo
+        mikoVoice = MikoNakanoVoice(this)
+        conversationDB = ConversationDatabase(this)
+        languageManager = LanguageManager(this)
+        networkManager = NetworkManager(this)
+        batteryOptimizer = BatteryOptimizer(this)
+        siestaDatabase = SiestaDatabase.getDatabase(this)
+
+        // 5. Instanciar los motores y clientes de Inteligencia Artificial
+        val geminiClient = GeminiClient(GEMINI_API_KEY)
+        val localAIModel = LocalAIModel(this)
+        smartAISelector = SmartAISelector(this, geminiClient, localAIModel, networkManager)
+
+        // 6. Configurar módulos de seguridad biométrica y reconocimiento por voz
+        biometricAuthenticator = BiometricAuthenticator(this)
+
+        voiceListener = BiometricVoiceListener(this) {
+            onSiestaKeywordDetected()
+        }
+
+        speechRecognizer = RealSpeechRecognizer(
+            this,
+            onResult = { recognizedText ->
+                findViewById<EditText>(R.id.chatInput).setText(recognizedText)
+            },
+            onError = { error ->
+                Toast.makeText(this, "Error de voz: $error", Toast.LENGTH_SHORT).show()
+            }
+        )
+
+        // 7. UI: Vinculación estricta de las vistas de la interfaz gráfica
+        val chatOutput = findViewById<TextView>(R.id.chatOutput)
+        val chatInput = findViewById<EditText>(R.id.chatInput)
+        val sendButton = findViewById<Button>(R.id.sendButton)
+        val speakButton = findViewById<Button>(R.id.speakButton)
+        val listenKeywordButton = findViewById<Button>(R.id.listenKeywordButton)
+        val recordVoiceButton = findViewById<Button>(R.id.recordVoiceButton)
+        val memoryButton = findViewById<Button>(R.id.memoryButton)
+        val settingsButton = findViewById<Button>(R.id.settingsButton)
+        val languageButton = findViewById<Button>(R.id.languageButton)
+        val batteryButton = findViewById<Button>(R.id.batteryButton)
+
+        val speedSeekBar = findViewById<SeekBar>(R.id.speedSeekBar)
+        val pitchSeekBar = findViewById<SeekBar>(R.id.pitchSeekBar)
+
+        // Actualizar pantalla con el estado inicial de la IA y red
+        updateStatusMessage(chatOutput)
+
+        // --- CONTINÚA SUCESIVAMENTE CON LOS LISTENERS... (Unidos en el bloque anterior) ---
 
