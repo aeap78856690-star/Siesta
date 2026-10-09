@@ -1,0 +1,65 @@
+package com.siestaauth
+
+import android.content.Context
+import android.content.SharedPreferences
+
+class SmartAISelector(
+    private val context: Context,
+    private val geminiClient: GeminiClient,
+    private val localAIModel: LocalAIModel,
+    private val networkManager: NetworkManager
+) {
+
+    private val prefs: SharedPreferences = context.getSharedPreferences(
+        "siesta_ai_mode",
+        Context.MODE_PRIVATE
+    )
+
+    fun getAIMode(): String {
+        return prefs.getString("ai_mode", "auto") ?: "auto"
+    }
+
+    fun setAIMode(mode: String) {
+        // Modos válidos: "auto", "online", "offline"
+        if (listOf("auto", "online", "offline").contains(mode)) {
+            prefs.edit().putString("ai_mode", mode).apply()
+        }
+    }
+
+    suspend fun selectAndChat(message: String): String {
+        val mode = getAIMode()
+
+        return when (mode) {
+            "online" -> {
+                // Forzar online
+                geminiClient.chat(message)
+            }
+            "offline" -> {
+                // Forzar offline
+                localAIModel.chat(message)
+            }
+            "auto" -> {
+                // Automático según conexión
+                if (networkManager.isOnline()) {
+                    geminiClient.chat(message)
+                } else {
+                    localAIModel.chat(message)
+                }
+            }
+            else -> "Error en modo IA"
+        }
+    }
+
+    fun getCurrentStatus(): String {
+        val mode = getAIMode()
+        val isOnline = networkManager.isOnline()
+
+        return when {
+            mode == "auto" && isOnline -> "Modo Auto (Online)"
+            mode == "auto" && !isOnline -> "Modo Auto (Offline)"
+            mode == "online" -> "Modo Online Forzado"
+            mode == "offline" -> "Modo Offline Forzado"
+            else -> "Desconocido"
+        }
+    }
+}
