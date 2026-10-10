@@ -10,14 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-            - name: Ver archivos
+      - name: Ver archivos
         run: |
           find app/src -type f
-          echo "-----"
-          head -n 20 app/src/main/java/com/siesta/ai/MainActivity.kt | cat -A
-          find app/src -type f
-          echo "-----"
-          head -n 20 app/src/main/java/com/siesta/ai/MainActivity.kt | cat -A
+          echo "----- DECLARACIONES"
+          grep -rnE "^(package|(data |open |abstract )?class|object|interface)" app/src/main/java --include=*.kt
 
       - uses: actions/setup-java@v4
         with:
