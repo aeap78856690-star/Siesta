@@ -10,12 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Ver archivos
-        run: |
-          find app/src -type f
-          echo "----- DECLARACIONES"
-          grep -rnE "^(package|(data |open |abstract )?class|object|interface)" app/src/main/java --include=*.kt
-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -32,6 +26,30 @@ jobs:
             cp /tmp/clean.kt "$f"
           done
 
+      - name: Reparar proyecto
+        run: |
+          J=app/src/main/java
+          L=app/src/main/res/layout
+          rm -f "$J/com/siesta/app AuthActivity.kt" "$J/com/siesta/app/ PermissionController.kt"
+          mkdir -p $L
+          for n in activity_auth activity_camera activity_gallery; do
+            [ -f $L/$n.xml ] || printf '%s\n' '<?xml version="1.0" encoding="utf-8"?>' '<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent"/>' > $L/$n.xml
+          done
+          [ -f $L/activity_user_setup.xml ] || printf '%s\n' \
+            '<?xml version="1.0" encoding="utf-8"?>' \
+            '<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center">' \
+            '<Button android:id="@+id/btnYo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Yo"/>' \
+            '<Button android:id="@+id/btnNovia" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Novia"/>' \
+            '<Button android:id="@+id/btnPrima" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Prima"/>' \
+            '</LinearLayout>' > $L/activity_user_setup.xml
+          C=$L/activity_chat.xml
+          if [ -f $C ]; then
+            grep -q speakButton $C || sed -i '$i <Button android:id="@+id/speakButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Hablar"/>' $C
+            grep -q speedSeekBar $C || sed -i '$i <SeekBar android:id="@+id/speedSeekBar" android:layout_width="match_parent" android:layout_height="wrap_content"/>' $C
+            grep -q pitchSeekBar $C || sed -i '$i <SeekBar android:id="@+id/pitchSeekBar" android:layout_width="match_parent" android:layout_height="wrap_content"/>' $C
+          fi
+          sed -i -E 's/RecognizerIntent\.getLanguageDetailsIntent\([^)]*\)/android.content.Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS)/' $J/com/siestaauth/BiometricVoiceListener.kt
+
       - name: Build debug APK
         run: |
           set -o pipefail
@@ -40,8 +58,8 @@ jobs:
       - name: Resumen de errores
         if: failure()
         run: |
-          grep -E "^e:" build.log | head -n 10
-          grep -A8 "What went wrong" build.log | head -n 20
+          grep -E "^e:" build.log | sed 's#file:///home/runner/work/Siesta/Siesta/app/src/main/java/##' | sort -u | head -n 40
+          grep -A8 "What went wrong" build.log | head -n 12
 
       - uses: actions/upload-artifact@v4
         with:
