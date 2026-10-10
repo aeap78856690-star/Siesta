@@ -19,8 +19,10 @@ jobs:
         with:
           gradle-version: 8.9
 
-      - name: Build debug APK
-        run: gradle assembleDebug --no-daemon
+            - name: Build debug APK
+        run: |
+          gradle projects --no-daemon
+          gradle assembleDebug --no-daemon
 
       - uses: actions/upload-artifact@v4
         with:
