@@ -10,12 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Ver archivos
-        run: |
-          find app/src -type f
-          echo "-----"
-          head -n 20 app/src/main/java/com/siesta/ai/MainActivity.kt | cat -A
-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -26,9 +20,10 @@ jobs:
           gradle-version: 8.9
 
       - name: Build debug APK
-        run: gradle assembleDebug --no-daemon 2>&1 | grep -E "^e:|What went wrong|BUILD" | head -n 15
+        run: gradle assembleDebug --no-daemon
 
       - uses: actions/upload-artifact@v4
         with:
           name: Siesta-APK
           path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
