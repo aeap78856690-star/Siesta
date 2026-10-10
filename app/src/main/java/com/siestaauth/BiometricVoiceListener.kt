@@ -1,7 +1,9 @@
 package com.siestaauth
 
 import android.content.Context
+import android.content.Intent
 import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.util.Log
 import android.widget.Toast
@@ -24,7 +26,10 @@ class BiometricVoiceListener(
         speechRecognizer.setRecognitionListener(this)
         isListening = true
 
-        val intent = android.speech.RecognizerIntent.getLanguageDetailsIntent(context)
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-ES")
+        }
         speechRecognizer.startListening(intent)
     }
 
