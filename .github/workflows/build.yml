@@ -25,6 +25,13 @@ jobs:
         with:
           gradle-version: 8.9
 
+      - name: Limpiar copias repetidas
+        run: |
+          find app/src -name '*.kt' -print0 | while IFS= read -r -d '' f; do
+            awk '/^package /{n++} n<=1' "$f" > /tmp/clean.kt
+            cp /tmp/clean.kt "$f"
+          done
+
       - name: Build debug APK
         run: |
           set -o pipefail
