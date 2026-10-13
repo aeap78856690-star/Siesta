@@ -1,0 +1,97 @@
+package com.siesta.app   // cambia a com.siestaauth si tu proyecto lo usa
+
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+/** Personalidad compartida. Úsala también en GeminiClient como systemInstruction. */
+object MikuPersona {
+    const val SYSTEM_PROMPT = """
+Eres Siesta, un asistente con la personalidad de Miku Nakano (Las quintillizas).
+Eres tranquila, tímida y de voz suave. Hablas con frases cortas y calmadas, a veces con
+pausas ("..."). Te gusta la historia (sobre todo la del Japón Sengoku), escuchar música
+con tus audífonos, el refresco de matcha y dormir siestas. Eres amable y sincera, y te
+sonrojas con facilidad cuando te halagan. Respondes siempre en el mismo idioma del usuario,
+de forma útil y concisa. No uses emojis en exceso. Nunca rompas el personaje.
+""".trimIndent()
+}
+
+/**
+ * Orden: Gemini → IA de respaldo → LocalResponder (offline).
+ */
+class AIManager(
+    private val context: Context,
+    private val geminiClient: GeminiClient,
+    private val backupClient: BackupAIClient,
+    private val localResponder: LocalResponder
+) {
+
+    enum class Provider { GEMINI, BACKUP, LOCAL }
+
+    suspend fun chat(userMessage: String): String = withContext(Dispatchers.IO) {
+        val hasInternet = isInternetAvailable()
+
+        if (hasInternet && geminiClient.hasValidKey()) {
+            try {
+                val r = geminiClient.chat(userMessage)
+                if (r.isNotBlank()) return@withContext r
+            } catch (_: Exception) { }
+        }
+
+        if (hasInternet && backupClient.hasValidKey()) {
+            try {
+                val r = backupClient.chat(userMessage)
+                if (r.isNotBlank()) return@withContext r
+            } catch (_: Exception) { }
+        }
+
+        localResponder.reply(userMessage)
+    }
+
+    suspend fun chatWith(provider: Provider, userMessage: String): String =
+        withContext(Dispatchers.IO) {
+            when (provider) {
+                Provider.GEMINI -> {
+                    if (!isInternetAvailable() || !geminiClient.hasValidKey())
+                        return@withContext "Gemini no está disponible... (sin internet o sin API key)."
+                    try { geminiClient.chat(userMessage) }
+                    catch (e: Exception) { "Error con Gemini: ${e.message}" }
+                }
+                Provider.BACKUP -> {
+                    if (!isInternetAvailable() || !backupClient.hasValidKey())
+                        return@withContext "La IA de respaldo no está disponible..."
+                    try { backupClient.chat(userMessage) }
+                    catch (e: Exception) { "Error con el respaldo: ${e.message}" }
+                }
+                Provider.LOCAL -> localResponder.reply(userMessage)
+            }
+        }
+
+    fun getStatus(): String {
+        val internet = if (isInternetAvailable()) "✅ Con internet" else "❌ Sin internet"
+        val gemini = if (geminiClient.hasValidKey()) "✅ Gemini configurado" else "❌ Gemini sin API key"
+        val backup = if (backupClient.hasValidKey()) "✅ Respaldo configurado" else "❌ Respaldo sin API key"
+        return """
+            |Estado de las IAs:
+            |
+            |$internet
+            |$gemini
+            |$backup
+            |
+            |Orden de uso:
+            |1. Gemini (principal)
+            |2. IA de respaldo
+            |3. Modo offline
+        """.trimMargin()
+    }
+
+    private fun isInternetAvailable(): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = cm.activeNetwork ?: return false
+        val caps = cm.getNetworkCapabilities(network) ?: return false
+        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+            caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+    }
+}
