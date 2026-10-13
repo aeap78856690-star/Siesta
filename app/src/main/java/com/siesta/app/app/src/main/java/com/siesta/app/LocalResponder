@@ -1,0 +1,137 @@
+package com.siesta.app   // cambia a com.siestaauth si tu proyecto lo usa
+
+import android.content.Context
+import android.content.Intent
+import android.provider.Settings
+import java.text.Normalizer
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
+/** Respuestas sin internet, con la voz de Miku Nakano. */
+class LocalResponder(private val context: Context) {
+
+    private val es = Locale.forLanguageTag("es-ES")
+
+    private val canDo = listOf(
+        "Saludarte y charlar un poquito",
+        "Decirte la hora y la fecha",
+        "Abrir apps (WhatsApp, cámara, ajustes, galería...)",
+        "Decirte qué puedo y qué no puedo hacer"
+    )
+
+    private val cannotDo = listOf(
+        "Tener conversaciones largas o creativas",
+        "Buscar información actualizada",
+        "Analizar imágenes",
+        "Darte clima o noticias en tiempo real"
+    )
+
+    // Quita acentos y pasa a minúsculas: "Cámara" == "camara"
+    private fun normalize(s: String): String =
+        Normalizer.normalize(s.lowercase(es).trim(), Normalizer.Form.NFD)
+            .replace("\\p{Mn}+".toRegex(), "")
+
+    // Coincidencia por palabra completa (evita que "hi" active "this" o "hora" active "ahora")
+    private fun has(msg: String, vararg words: String): Boolean =
+        words.any { Regex("\\b${Regex.escape(it)}\\b").containsMatchIn(msg) }
+
+    private val apps = listOf(
+        Triple(listOf("whatsapp"), listOf("com.whatsapp"), "WhatsApp"),
+        Triple(listOf("camara"), listOf("com.android.camera", "com.google.android.GoogleCamera", "com.sec.android.app.camera"), "la cámara"),
+        Triple(listOf("galeria", "fotos"), listOf("com.google.android.apps.photos", "com.android.gallery3d", "com.sec.android.gallery3d"), "la galería"),
+        Triple(listOf("youtube"), listOf("com.google.android.youtube"), "YouTube"),
+        Triple(listOf("chrome", "navegador"), listOf("com.android.chrome"), "Chrome"),
+        Triple(listOf("instagram"), listOf("com.instagram.android"), "Instagram"),
+        Triple(listOf("tiktok"), listOf("com.zhiliaoapp.musically", "com.ss.android.ugc.trill"), "TikTok"),
+        Triple(listOf("maps", "mapas"), listOf("com.google.android.apps.maps"), "Maps")
+    )
+
+    fun reply(userMessage: String): String {
+        val msg = normalize(userMessage)
+
+        // Abrir apps
+        if (has(msg, "abre", "abrir", "abreme", "open")) {
+            if (has(msg, "ajustes", "configuracion", "settings")) return openSettings()
+            apps.firstOrNull { (keys, _, _) -> keys.any { has(msg, it) } }?.let { (_, pkgs, name) ->
+                return openApp(pkgs, name)
+            }
+        }
+
+        // Capacidades y límites
+        if (has(msg, "limitaciones") || msg.contains("no puedes"))
+            return "Sin internet... no puedo hacer esto:\n\n" +
+                cannotDo.joinToString("\n") { "• $it" } +
+                "\n\nSi activas el modo en línea, podré hacer más. Eso creo."
+
+        if (msg.contains("que puedes") || msg.contains("que sabes") || msg.contains("que haces") ||
+            has(msg, "capacidades", "ayuda", "help")
+        ) {
+            return "Ahora estoy sin conexión... pero esto sí puedo hacer:\n\n" +
+                canDo.mapIndexed { i, s -> "${i + 1}. $s" }.joinToString("\n") +
+                "\n\nY esto no:\n\n" +
+                cannotDo.mapIndexed { i, s -> "${i + 1}. $s" }.joinToString("\n") +
+                "\n\nPara más, configura Gemini en Ajustes."
+        }
+
+        return when {
+            has(msg, "hola", "buenas", "hey", "hi") || msg.contains("buenos dias") ||
+                msg.contains("buenas tardes") || msg.contains("buenas noches") ->
+                "H-hola... soy Siesta. Estoy sin conexión ahora, así que solo puedo cosas simples.\n\nEscribe \"ayuda\" si quieres saber cuáles."
+
+            msg.contains("que hora") || has(msg, "hora") -> {
+                val now = Date()
+                val hora = SimpleDateFormat("HH:mm", es).format(now)
+                "Son las $hora... ${fechaCorta(now)}."
+            }
+
+            has(msg, "fecha", "dia") || msg.contains("que dia") ->
+                "Hoy es ${SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy", es).format(Date())}... creo que es un buen día para leer algo de historia."
+
+            msg.contains("como estas") || msg.contains("que tal") ->
+                "Estoy bien... un poco con sueño, la verdad. Y sin internet, así que respondo poquito. ¿Y tú?"
+
+            has(msg, "gracias") -> "N-no es nada... me alegra ayudar."
+
+            has(msg, "adios", "chao", "bye") || msg.contains("hasta luego") ->
+                "Hasta luego... Voy a tomar una siesta. Vuelve cuando quieras."
+
+            msg.contains("quien eres") || msg.contains("que eres") ->
+                "Soy Siesta... me inspiro en Miku Nakano. Me gusta la historia, la música y dormir. Ahora estoy sin conexión."
+
+            has(msg, "internet", "conexion", "online") ->
+                "Estoy sin conexión... Para conversar de verdad necesito internet y una API key en Ajustes."
+
+            else ->
+                "Eh... no entendí eso. Sin internet soy muy limitada.\n\n" +
+                    "Prueba con:\n• hola\n• qué hora es\n• abre whatsapp / cámara / ajustes\n• ayuda"
+        }
+    }
+
+    private fun fechaCorta(d: Date): String {
+        val s = SimpleDateFormat("EEEE d 'de' MMMM", es).format(d)
+        return "Hoy es " + s
+    }
+
+    private fun openSettings(): String = try {
+        context.startActivity(
+            Intent(Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        )
+        "Abriendo Ajustes..."
+    } catch (e: Exception) {
+        "No pude abrir los Ajustes..."
+    }
+
+    // Prueba varios paquetes (cada marca de teléfono usa uno distinto)
+    private fun openApp(packages: List<String>, appName: String): String {
+        for (pkg in packages) {
+            try {
+                val intent = context.packageManager.getLaunchIntentForPackage(pkg) ?: continue
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+                return "Abriendo $appName..."
+            } catch (_: Exception) { }
+        }
+        return "No pude abrir $appName... quizá no está instalada."
+    }
+}
